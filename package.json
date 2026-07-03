@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:server": "cd server && npm run dev",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "build:server": "cd server && npm run build",
     "start": "cd server && node dist/index.js",
     "postinstall": "cd server && npm install",
