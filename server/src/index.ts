@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
 import { authRouter } from './routes/auth.js';
 import { vendorsRouter } from './routes/vendors.js';
 import { bookingsRouter } from './routes/bookings.js';
@@ -30,12 +31,16 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// In production, serve the built frontend
+// In production, serve the built frontend if available
 if (isProd) {
-  const distPath = join(__dirname, '../../dist');
+  const distPath = join(__dirname, '..', '..', 'dist');
   app.use(express.static(distPath));
   app.get('*', (_req, res) => {
-    res.sendFile(join(distPath, 'index.html'));
+    if (existsSync(join(distPath, 'index.html'))) {
+      res.sendFile(join(distPath, 'index.html'));
+    } else {
+      res.status(200).json({ message: 'Eventa API is running' });
+    }
   });
 }
 
